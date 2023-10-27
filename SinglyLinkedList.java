@@ -38,7 +38,7 @@ public class SinglyLinkedList {
             current = current.next;
         }
         if (current == this.head) {
-            node.next = this.head;
+            node.next = current;
             this.head = node;
             if (this.size == 0) this.tail = this.head;
         } else {
@@ -74,6 +74,9 @@ public class SinglyLinkedList {
             } else if (node.column > column) {          //if it's 0,updating is like adding!
                 add(newValue, row, column);
                 break;
+            }else if(newValue==0){
+                remove(column);
+                break;
             }
             node = node.next;
 
@@ -86,7 +89,7 @@ public class SinglyLinkedList {
         Node node = this.head;
         while (node != null) {
             if (node.data == value) {
-                result = "Row: " + node.row + "Column: " + node.column;
+                result = "Row: " + node.row + " Column: " + node.column;
                 break;
             }
             node = node.next;

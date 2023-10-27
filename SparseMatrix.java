@@ -4,27 +4,25 @@ import java.util.Scanner;
 public class SparseMatrix {
 
     static String showCompletely(SinglyLinkedList[] matrix, int columns, int row) {
-        StringBuilder result=new StringBuilder();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < row; i++) {
             //A string for each raw and value is 0 for all columns
             StringBuilder eachRaw = new StringBuilder();
-            eachRaw.append("0 ".repeat(Math.max(0, columns)));
+            eachRaw.append(" 0  ".repeat(Math.max(0, columns)));
 
             SinglyLinkedList.Node node = matrix[i].head;
             if (node != null) {
-                int numberOfPre=0;
                 for (int j = 0; j < columns; j++) {
                     if (node.column == j) {
                         //replace the real value
-                        eachRaw.replace(j*2+numberOfPre,j*2+numberOfPre+1, String.valueOf(node.data));
-                        //if we have the previous node,every index will add
-                        numberOfPre+=String.valueOf(node.data).length()-1;
+                        eachRaw.replace(j * 4 , j * 4 + String.valueOf(node.data).length(), String.valueOf(node.data));
+
                         node = node.next;
                     }
-                    if (node==null)break;
+                    if (node == null) break;
                 }
             }
-            result.append(eachRaw).append("\n");
+            result.append(eachRaw).append("\n\n");
         }
         return result.toString();
     }
@@ -52,9 +50,14 @@ public class SparseMatrix {
 
     public static void main(String[] args) throws IOException {
 
-        //read the csv file
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\M(10,5).csv"));
+        //input the file address
+        System.out.println("Please enter the file address:");
+        Scanner sc = new Scanner(System.in);
+        String address=sc.nextLine();
 
+        //read the csv file
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(address));
         //numberOfColumns
         String raws = bufferedReader.readLine();
         int numberOfColumns = raws.split(",").length;
@@ -68,7 +71,7 @@ public class SparseMatrix {
 
         //read again for fulling
 
-        bufferedReader = new BufferedReader(new FileReader("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\M(10,5).csv"));
+        bufferedReader = new BufferedReader(new FileReader(address));
         SinglyLinkedList[] matrix = new SinglyLinkedList[numberOfRows];
         for (int i = 0; i < numberOfRows; i++) {
             matrix[i] = new SinglyLinkedList();
@@ -79,7 +82,6 @@ public class SparseMatrix {
         String input;
         do {
             System.out.println("Please choose one of following orders:\n1.add\n2.delete\n3.update\n4.search\n5.show matrix\n6.show compact form\n0.exit");
-            Scanner sc = new Scanner(System.in);
             input = sc.nextLine();
 
             switch (input) {
@@ -92,7 +94,7 @@ public class SparseMatrix {
                 case "2" -> {
                     System.out.println("Please send me row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-                    matrix[Integer.parseInt(orders[0])].remove( Integer.parseInt(orders[1]));
+                    matrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[1]));
                     System.out.println("Removing done :)");
                 }
                 case "3" -> {
@@ -104,15 +106,16 @@ public class SparseMatrix {
                 case "4" -> {
                     System.out.println("Please send me data:");
                     String orders = sc.nextLine();
-                    String resultUpdate=null;
+                    String resultUpdate = null;
                     //search in each raw
                     for (int i = 0; i < numberOfRows; i++) {
-                        resultUpdate=matrix[i].search(Integer.parseInt(orders));
-                        if (resultUpdate!=null){
+                        resultUpdate = matrix[i].search(Integer.parseInt(orders));
+                        if (resultUpdate != null) {
                             System.out.println(resultUpdate);
                             break;
                         }
-                    }if(resultUpdate==null)System.out.println("It doesn't exist!");
+                    }
+                    if (resultUpdate == null) System.out.println("It doesn't exist!");
                 }
                 case "5" -> System.out.println(showCompletely(matrix, numberOfColumns, numberOfRows));
                 case "6" -> {

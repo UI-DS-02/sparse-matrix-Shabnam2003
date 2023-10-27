@@ -49,12 +49,17 @@ public class SinglyLinkedList {
     }
 
     void remove(int column) {
+        Node pre=null;
         Node node = this.head;
         while (node != null) {
             if (node.column == column) {                      //if it isn't 0,changed the data to 0!
                 node.data = 0;
+                if (node == this.head) {                     //change the pointers
+                    this.head = node.next;
+                } else pre.next = node.next;
                 break;
             } else if (node.column > column) break;                 //It's 0 by default!
+            else pre = node;
             node = node.next;
         }
     }

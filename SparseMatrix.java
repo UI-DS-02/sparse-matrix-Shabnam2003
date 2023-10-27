@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class SparseMatrix {
 
-    static String showCompletely(SinglyLinkedList[] matrix, int columns, int raw) {
+    static String showCompletely(SinglyLinkedList[] matrix, int columns, int row) {
         StringBuilder result=new StringBuilder();
-        for (int i = 0; i < raw; i++) {
+        for (int i = 0; i < row; i++) {
             //A string for each raw and value is 0 for all columns
             StringBuilder eachRaw = new StringBuilder();
             eachRaw.append("0 ".repeat(Math.max(0, columns)));
@@ -32,10 +32,10 @@ public class SparseMatrix {
 
     static void fullCompact(BufferedReader bufferedReader, int numberOfColumns, SinglyLinkedList[] matrix) throws IOException {
         int row = -1;
-        String raws = bufferedReader.readLine();
+        String rows = bufferedReader.readLine();
         String[] input;
-        while (raws != null) {
-            input = raws.split(",");
+        while (rows != null) {
+            input = rows.split(",");
             row++;
             for (int i = 0; i < numberOfColumns; i++) {
 
@@ -45,7 +45,7 @@ public class SparseMatrix {
                     matrix[row].add(Integer.parseInt(input[i]), row, i);
                 }
             }
-            raws = bufferedReader.readLine();
+            rows = bufferedReader.readLine();
         }
     }
 
@@ -84,19 +84,19 @@ public class SparseMatrix {
 
             switch (input) {
                 case "1" -> {
-                    System.out.println("Please send me data,raw,and column:");
+                    System.out.println("Please send me data,row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
                     matrix[Integer.parseInt(orders[1])].add(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
                     System.out.println("Adding done :)");
                 }
                 case "2" -> {
-                    System.out.println("Please send me raw,and column:");
+                    System.out.println("Please send me row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-//                    matrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]));
+                    matrix[Integer.parseInt(orders[0])].remove( Integer.parseInt(orders[1]));
                     System.out.println("Removing done :)");
                 }
                 case "3" -> {
-                    System.out.println("Please send me new data,raw,and column:");
+                    System.out.println("Please send me new data,row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
                     matrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
                     System.out.println("Updating done :)");

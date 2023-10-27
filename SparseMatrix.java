@@ -87,26 +87,32 @@ public class SparseMatrix {
                     System.out.println("Please send me data,raw,and column:");
                     String[] orders = sc.nextLine().split("\\s");
                     matrix[Integer.parseInt(orders[1])].add(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
-                    System.out.println("Done :)");
+                    System.out.println("Adding done :)");
                 }
                 case "2" -> {
                     System.out.println("Please send me raw,and column:");
                     String[] orders = sc.nextLine().split("\\s");
 //                    matrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]));
-                    System.out.println("Done :)");
+                    System.out.println("Removing done :)");
                 }
                 case "3" -> {
                     System.out.println("Please send me new data,raw,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-//                    matrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
-                    System.out.println("Done :)");
+                    matrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
+                    System.out.println("Updating done :)");
                 }
                 case "4" -> {
                     System.out.println("Please send me data:");
                     String orders = sc.nextLine();
+                    String resultUpdate=null;
+                    //search in each raw
                     for (int i = 0; i < numberOfRows; i++) {
-//                        System.out.println(matrix[i].search(Integer.parseInt(orders)));
-                    }
+                        resultUpdate=matrix[i].search(Integer.parseInt(orders));
+                        if (resultUpdate!=null){
+                            System.out.println(resultUpdate);
+                            break;
+                        }
+                    }if(resultUpdate==null)System.out.println("It doesn't exist!");
                 }
                 case "5" -> System.out.println(showCompletely(matrix, numberOfColumns, numberOfRows));
                 case "6" -> {

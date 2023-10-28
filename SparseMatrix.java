@@ -12,25 +12,27 @@ public class SparseMatrix {
         writer.close();
     }
 
-    static void saveMatrix(SinglyLinkedList[] matrix, int columns, int rows) throws IOException {
+    static void saveMatrixOfRow(SinglyLinkedList[] matrix, int columns, int rows) throws IOException {
         FileWriter writer = new FileWriter("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\normal.csv");
         writer.write(showCompletely(matrix, columns, rows));
         writer.close();
     }
 
-    static String showCompletely(SinglyLinkedList[] matrix, int columns, int rows) {
+
+
+    static String showCompletely(SinglyLinkedList[] rowMatrix, int columns, int rows) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < rows; i++) {
             //A string for each raw and value is 0 for all columns
             StringBuilder eachRaw = new StringBuilder();
             eachRaw.append(" 0  ".repeat(Math.max(0, columns)));
 
-            SinglyLinkedList.Node node = matrix[i].head;
+            SinglyLinkedList.Node node = rowMatrix[i].head;
             if (node != null) {
                 for (int j = 0; j < columns; j++) {
                     if (node.column == j) {
                         //replace the real value
-                        eachRaw.replace(j * 4+1, j * 4 + String.valueOf(node.data).length()+1, String.valueOf(node.data));
+                        eachRaw.replace(j * 4 + 1, j * 4 + String.valueOf(node.data).length() + 1, String.valueOf(node.data));
 
                         node = node.next;
                     }
@@ -43,7 +45,7 @@ public class SparseMatrix {
     }
 
 
-    static void fullCompact(BufferedReader bufferedReader, int numberOfColumns, SinglyLinkedList[] matrix) throws IOException {
+    static void fill(BufferedReader bufferedReader, int numberOfColumns, SinglyLinkedList[] rowMatrix, SinglyLinkedList[] columnMatrix) throws IOException {
         int row = -1;
         String rows = bufferedReader.readLine();
         String[] input;
@@ -51,11 +53,9 @@ public class SparseMatrix {
             input = rows.split(",");
             row++;
             for (int i = 0; i < numberOfColumns; i++) {
-
                 //if it wasn't 0, we add it.
-
                 if (!input[i].equals("0")) {
-                    matrix[row].add(Integer.parseInt(input[i]), row, i);
+                    rowMatrix[row].addInRow(Integer.parseInt(input[i]), row, i, columnMatrix[i]);      //add to row and column
                 }
             }
             rows = bufferedReader.readLine();
@@ -85,17 +85,24 @@ public class SparseMatrix {
 
         //read again for fulling
 
-        bufferedReader = new BufferedReader(new FileReader(address));
-        SinglyLinkedList[] matrix = new SinglyLinkedList[numberOfRows];
+        SinglyLinkedList[] rowMatrix = new SinglyLinkedList[numberOfRows];
+        SinglyLinkedList[] columnMatrix = new SinglyLinkedList[numberOfColumns];
         for (int i = 0; i < numberOfRows; i++) {
-            matrix[i] = new SinglyLinkedList();
+            rowMatrix[i] = new SinglyLinkedList();
         }
-        fullCompact(bufferedReader, numberOfColumns, matrix);
-        //save matrix in csv
-        saveCompact(matrix, numberOfRows);
 
-        //save matrix in csv
-        saveMatrix(matrix, numberOfColumns, numberOfRows);
+        for (int i = 0; i < numberOfColumns; i++) {
+            columnMatrix[i] = new SinglyLinkedList();
+        }
+
+        bufferedReader = new BufferedReader(new FileReader(address));
+        fill(bufferedReader, numberOfColumns, rowMatrix, columnMatrix);
+
+        //save rowMatrix in csv
+        saveCompact(rowMatrix, numberOfRows);
+
+        //save rowMatrix in csv
+        saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
 
         String input;
@@ -107,11 +114,12 @@ public class SparseMatrix {
                 case "1" -> {
                     System.out.println("Please send me data,row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-                    matrix[Integer.parseInt(orders[1])].add(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
 
-                    //save matrix in csv
-                    saveCompact(matrix, numberOfRows);
-                    saveMatrix(matrix, numberOfColumns, numberOfRows);
+                    rowMatrix[Integer.parseInt(orders[1])].addInRow(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]),columnMatrix[Integer.parseInt(orders[2])]);
+
+                    //save rowMatrix in csv
+                    saveCompact(rowMatrix, numberOfRows);
+                    saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
 
                     System.out.println("Adding done :)");
@@ -119,22 +127,22 @@ public class SparseMatrix {
                 case "2" -> {
                     System.out.println("Please send me row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-                    matrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[1]));
+                    rowMatrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[1]),columnMatrix[Integer.parseInt(orders[1])]);
 
-                    //save matrix in csv
-                    saveCompact(matrix, numberOfRows);
-                    saveMatrix(matrix, numberOfColumns, numberOfRows);
+                    //save rowMatrix in csv
+                    saveCompact(rowMatrix, numberOfRows);
+                    saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
                     System.out.println("Removing done :)");
                 }
                 case "3" -> {
                     System.out.println("Please send me new data,row,and column:");
                     String[] orders = sc.nextLine().split("\\s");
-                    matrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]));
+                    rowMatrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]),columnMatrix[ Integer.parseInt(orders[2])]);
 
-                    //save matrix in csv
-                    saveCompact(matrix, numberOfRows);
-                    saveMatrix(matrix, numberOfColumns, numberOfRows);
+                    //save rowMatrix in csv
+                    saveCompact(rowMatrix, numberOfRows);
+                    saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
                     System.out.println("Updating done :)");
                 }
@@ -144,14 +152,9 @@ public class SparseMatrix {
                     String resultUpdate = null;
                     //search in each raw
                     for (int i = 0; i < numberOfRows; i++) {
-                        resultUpdate = matrix[i].search(Integer.parseInt(orders));
+                        resultUpdate = rowMatrix[i].search(Integer.parseInt(orders));
                         if (resultUpdate != null) {
                             System.out.println(resultUpdate);
-
-                            //save matrix in csv
-                            saveCompact(matrix, numberOfRows);
-                            saveMatrix(matrix, numberOfColumns, numberOfRows);
-
                             break;
                         }
                     }

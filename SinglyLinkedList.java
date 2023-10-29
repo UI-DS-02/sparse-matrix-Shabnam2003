@@ -10,7 +10,9 @@ public class SinglyLinkedList {
         int data;
         int row;
         int column;
-        Node next;
+        Node nextColumn;
+        Node nextRow;
+
 
         Node(int data, int row, int column) {
             this.data = data;
@@ -24,7 +26,7 @@ public class SinglyLinkedList {
         StringBuilder result = new StringBuilder();
         while (node != null) {
             result.append(node.row).append(" ").append(node.column).append(" ").append(node.data).append("\n");
-            node = node.next;
+            node = node.nextColumn;
         }
         return result.toString();
     }
@@ -33,37 +35,36 @@ public class SinglyLinkedList {
         Node node = new Node(data, row, column);
         Node current = this.head;
         Node pre = null;
-        while (current != null && current.column < column) {
+        while (current != null && current.column < column) {            //find the place
             pre = current;
-            current = current.next;
+            current = current.nextColumn;
         }
         if (current == this.head) {
-            node.next = current;
+            node.nextColumn = current;
             this.head = node;
             if (this.size == 0) this.tail = this.head;
         } else {
-            pre.next = node;
-            node.next = current;
+            pre.nextColumn = node;
+            node.nextColumn = current;
         }
-        columns.addInColumn(data,row,column);
+        columns.addInColumn(node);
         this.size++;
     }
 
-    private void addInColumn(int data, int row, int column) {
-        Node node = new Node(data, row, column);
+    private void addInColumn(Node node) {
         Node current = this.head;
         Node pre = null;
-        while (current != null && current.row < row) {
+        while (current != null && current.row < node.row) {              //find the place
             pre = current;
-            current = current.next;
+            current = current.nextRow;
         }
         if (current == this.head) {
-            node.next = current;
+            node.nextRow = current;
             this.head = node;
             if (this.size == 0) this.tail = this.head;
         } else {
-            pre.next = node;
-            node.next = current;
+            pre.nextRow = node;
+            node.nextRow = current;
         }
         this.size++;
     }
@@ -74,14 +75,17 @@ public class SinglyLinkedList {
         while (node != null) {
             if (node.column == column) {                      //if it isn't 0,changed the data to 0!
                 node.data = 0;
+                this.size--;
                 columns.removeFromColumn(node.row);
                 if (node == this.head) {                     //change the pointers
-                    this.head = node.next;
-                } else pre.next = node.next;
+                    this.head = node.nextColumn;
+                } else if (pre != null) {
+                    pre.nextColumn = node.nextColumn;
+                }
                 break;
             } else if (node.column > column) break;                 //It's 0 by default!
             else pre = node;
-            node = node.next;
+            node = node.nextColumn;
         }
     }
 
@@ -90,14 +94,14 @@ public class SinglyLinkedList {
         Node node = this.head;
         while (node != null) {
             if (node.row == row) {                      //if it isn't 0,changed the data to 0!
-                node.data = 0;
+                this.size--;
                 if (node == this.head) {                     //change the pointers
-                    this.head = node.next;
-                } else pre.next = node.next;
+                    this.head = node.nextRow;
+                } else pre.nextRow = node.nextRow;
                 break;
             } else if (node.row > row) break;                 //It's 0 by default!
             else pre = node;
-            node = node.next;
+            node = node.nextRow;
         }
     }
 
@@ -107,7 +111,6 @@ public class SinglyLinkedList {
         while (node != null) {
             if (node.column == column) {                      //if it isn't 0,changed the data!
                 node.data = newValue;
-                columns.updateColumn(newValue,row);
                 break;
             } else if (node.column > column) {          //if it's 0,updating is like adding!
                 addInRow(newValue, row, column, columns);
@@ -116,32 +119,27 @@ public class SinglyLinkedList {
                 remove(column, columns);
                 break;
             }
-            node = node.next;
+            node = node.nextColumn;
 
         }
     }
 
-    private void updateColumn(int newValue,int row) {
-        Node node = this.head;
-        while (node != null) {
-            if (node.row == row) {
-                node.data = newValue;
-                break;
-            }
-            node = node.next;
-        }
-    }
 
     //search in row
     String search(int value) {
+        Node rowNode = this.head;
         String result = null;
-        Node node = this.head;
-        while (node != null) {
-            if (node.data == value) {
-                result = "Row: " + node.row + " Column: " + node.column;
+        Node columnNode = this.head;
+        while (columnNode != null) {
+            if (columnNode.data == value) {                //search in a row
+                result = "Row: " + columnNode.row + " Column: " + columnNode.column;
+                break;
+            } else if (rowNode!=null && rowNode.data == value) {            //search in a column
+                result = "Row: " + columnNode.row + " Column: " + columnNode.column;
                 break;
             }
-            node = node.next;
+            rowNode = columnNode.nextRow;
+            columnNode = columnNode.nextColumn;
         }
         return result;
     }

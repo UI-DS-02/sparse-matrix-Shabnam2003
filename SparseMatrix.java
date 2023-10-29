@@ -34,7 +34,7 @@ public class SparseMatrix {
                         //replace the real value
                         eachRaw.replace(j * 4 + 1, j * 4 + String.valueOf(node.data).length() + 1, String.valueOf(node.data));
 
-                        node = node.next;
+                        node = node.nextColumn;
                     }
                     if (node == null) break;
                 }
@@ -159,7 +159,6 @@ public class SparseMatrix {
                         }
                     }
                     if (resultUpdate == null) System.out.println("It doesn't exist!");
-
                 }
                 case "5" -> {
                     bufferedReader = new BufferedReader(new FileReader("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\normal.csv"));

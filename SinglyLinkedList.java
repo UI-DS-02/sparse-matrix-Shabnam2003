@@ -135,7 +135,7 @@ public class SinglyLinkedList {
                 result = "Row: " + columnNode.row + " Column: " + columnNode.column;
                 break;
             } else if (rowNode!=null && rowNode.data == value) {            //search in a column
-                result = "Row: " + columnNode.row + " Column: " + columnNode.column;
+                result = "Row: " + rowNode.row + " Column: " + rowNode.column;
                 break;
             }
             rowNode = columnNode.nextRow;

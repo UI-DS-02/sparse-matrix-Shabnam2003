@@ -21,12 +21,22 @@ public class SinglyLinkedList {
         }
     }
 
-    String traverse() {
+    String traverseInRow() {
         Node node = this.head;
         StringBuilder result = new StringBuilder();
         while (node != null) {
             result.append(node.row).append(" ").append(node.column).append(" ").append(node.data).append("\n");
             node = node.nextColumn;
+        }
+        return result.toString();
+    }
+
+    String traverseInColumn() {
+        Node node = this.head;
+        StringBuilder result = new StringBuilder();
+        while (node != null) {
+            result.append(node.row).append(" ").append(node.column).append(" ").append(node.data).append("\n");
+            node = node.nextRow;
         }
         return result.toString();
     }

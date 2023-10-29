@@ -3,11 +3,21 @@ import java.util.Scanner;
 
 public class SparseMatrix {
 
-    static void saveCompact(SinglyLinkedList[] matrix, int numberOfRows) throws IOException {
+    static void saveCompactFromRow(SinglyLinkedList[] rowMatrix, int numberOfRows) throws IOException {
         FileWriter writer = new FileWriter("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\compact.csv");
         for (int i = 0; i < numberOfRows; i++) {
-            String element = matrix[i].traverse();
-            if (element != null) writer.write(matrix[i].traverse());
+            String element = rowMatrix[i].traverseInRow();
+            if (element != null) writer.write(rowMatrix[i].traverseInRow());
+        }
+        writer.close();
+    }
+
+
+    static void saveCompactFromColumn(SinglyLinkedList[] columnMatrix, int numberOfColumns) throws IOException {
+        FileWriter writer = new FileWriter("D:\\data structures\\practice\\miniProject1\\sparse-matrix-Shabnam2003\\compact from columns.csv");
+        for (int i = 0; i < numberOfColumns; i++) {
+            String element = columnMatrix[i].traverseInColumn();
+            if (element != null) writer.write(columnMatrix[i].traverseInColumn());
         }
         writer.close();
     }
@@ -99,7 +109,8 @@ public class SparseMatrix {
         fill(bufferedReader, numberOfColumns, rowMatrix, columnMatrix);
 
         //save rowMatrix in csv
-        saveCompact(rowMatrix, numberOfRows);
+        saveCompactFromRow(rowMatrix, numberOfRows);
+        saveCompactFromColumn(columnMatrix,numberOfColumns);
 
         //save rowMatrix in csv
         saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
@@ -118,7 +129,8 @@ public class SparseMatrix {
                     rowMatrix[Integer.parseInt(orders[1])].addInRow(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]),columnMatrix[Integer.parseInt(orders[2])]);
 
                     //save rowMatrix in csv
-                    saveCompact(rowMatrix, numberOfRows);
+                    saveCompactFromRow(rowMatrix, numberOfRows);
+                    saveCompactFromColumn(columnMatrix,numberOfColumns);
                     saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
 
@@ -130,7 +142,8 @@ public class SparseMatrix {
                     rowMatrix[Integer.parseInt(orders[0])].remove(Integer.parseInt(orders[1]),columnMatrix[Integer.parseInt(orders[1])]);
 
                     //save rowMatrix in csv
-                    saveCompact(rowMatrix, numberOfRows);
+                    saveCompactFromRow(rowMatrix, numberOfRows);
+                    saveCompactFromColumn(columnMatrix,numberOfColumns);
                     saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
                     System.out.println("Removing done :)");
@@ -141,13 +154,14 @@ public class SparseMatrix {
                     rowMatrix[Integer.parseInt(orders[1])].update(Integer.parseInt(orders[0]), Integer.parseInt(orders[1]), Integer.parseInt(orders[2]),columnMatrix[ Integer.parseInt(orders[2])]);
 
                     //save rowMatrix in csv
-                    saveCompact(rowMatrix, numberOfRows);
+                    saveCompactFromRow(rowMatrix, numberOfRows);
+                    saveCompactFromColumn(columnMatrix,numberOfColumns);
                     saveMatrixOfRow(rowMatrix, numberOfColumns, numberOfRows);
 
                     System.out.println("Updating done :)");
                 }
                 case "4" -> {
-                    System.out.println("Please send me data:");
+                    System.out.println("Please send me the data:");
                     String orders = sc.nextLine();
                     String resultUpdate = null;
                     //search in each raw
